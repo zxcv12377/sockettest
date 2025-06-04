@@ -3,10 +3,10 @@ package com.example.sockettest.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.sockettest.dto.SpeakingStatusRequest;
-import com.example.sockettest.dto.VoiceChannelJoinRequest;
-import com.example.sockettest.entity.Member;
-import com.example.sockettest.entity.VoiceChannel;
+import com.example.sockettest.dto.voiceChat.SpeakingStatusRequest;
+import com.example.sockettest.dto.voiceChat.VoiceChannelJoinRequest;
+import com.example.sockettest.entity.VoiceChat.Member;
+import com.example.sockettest.entity.VoiceChat.VoiceChannel;
 import com.example.sockettest.service.VoiceChannelMemberService;
 import com.example.sockettest.service.VoiceChatLogService;
 

@@ -3,7 +3,7 @@ package com.example.sockettest.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.sockettest.repository.VoiceChatLogRepository;
+import com.example.sockettest.repository.voiceChat.VoiceChatLogRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -4,9 +4,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import com.example.sockettest.dto.SpeakingStatusRequest;
-import com.example.sockettest.entity.Member;
-import com.example.sockettest.entity.VoiceChannel;
+import com.example.sockettest.dto.voiceChat.SpeakingStatusRequest;
+import com.example.sockettest.entity.VoiceChat.Member;
+import com.example.sockettest.entity.VoiceChat.VoiceChannel;
 import com.example.sockettest.service.VoiceChannelMemberService;
 import com.example.sockettest.service.VoiceChatLogService;
 

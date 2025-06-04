@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.sockettest.entity.Member;
-import com.example.sockettest.entity.VoiceChannel;
 import com.example.sockettest.entity.VoiceChatLog;
-import com.example.sockettest.repository.VoiceChatLogRepository;
+import com.example.sockettest.entity.VoiceChat.Member;
+import com.example.sockettest.entity.VoiceChat.VoiceChannel;
+import com.example.sockettest.repository.voiceChat.VoiceChatLogRepository;
 
 import lombok.RequiredArgsConstructor;
 

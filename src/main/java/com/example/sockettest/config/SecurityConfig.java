@@ -1,7 +1,5 @@
 package com.example.sockettest.config;
 
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,11 +14,13 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.example.sockettest.filter.JwtFilter;
+import com.example.sockettest.security.custom.CustomUserDetailsService;
+import com.example.sockettest.security.custom.JwtAuthenticationEntryPoint;
+import com.example.sockettest.security.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,68 +29,83 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService userDetailsService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
-
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/assets/**", "/css/**", "/js/**", "/upload/**").permitAll()
-                        .requestMatchers("/movie/list", "/movie/read").permitAll()
-                        .requestMatchers("/reviews/**", "/upload/display/**").permitAll()
-                        .requestMatchers("/member/register").permitAll()
-                        .requestMatchers("/api/**", "/ws/**").permitAll() // WebSocket 허용
-                        .anyRequest().permitAll());
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (REST API용)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 안씀
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/members/register", "/api/members/login", "/error").permitAll() // 회원가입/로그인
+                                                                                                              // 허용
+                        .requestMatchers(HttpMethod.PUT, "/api/members/password/reset", "/api/members/password")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/boards/**", "/api/replies/**",
+                                "/api/members/check-nickname", "/api/members/find-id")
+                        .permitAll()
 
-        http.csrf(csrf -> csrf.disable());
+                        .requestMatchers("/api/chatrooms/**").authenticated() // 채팅 rest api
+                        .requestMatchers(HttpMethod.GET, "/api/members/mypage").authenticated()
 
-        // http.formLogin(login -> login.loginPage("/member/login")
-        // .defaultSuccessUrl("/")
-        // .permitAll());
+                        .requestMatchers(HttpMethod.POST, "/api/boards", "/api/replies/**", "/api/members/mypage")
+                        .authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/boards/**", "/api/replies/**", "/api/members/mypage",
+                                "/api/members/nickname")
+                        .authenticated()
 
-        // http.logout(logout -> logout
-        // .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-        // .logoutSuccessUrl("/"));
-
-        // http.rememberMe(remember -> remember.rememberMeServices(rememberMeServices));
+                        .requestMatchers(HttpMethod.DELETE, "/api/boards/**", "/api/replies/**", "/api/members/mypage")
+                        .authenticated()
+                        .anyRequest().permitAll())
+                .formLogin(form -> form.disable()) // 폼로그인 비활성화 (HTML UI 미사용)
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .userDetailsService(userDetailsService) // 사용자 정보 서비스 등록
+                // JWT 인증 실패 401 처리
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 
         return http.build();
     }
 
-    @Bean // CORS 설정 메소드 추가
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*")); // 또는 정확히 "http://localhost:5173"
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true); // 쿠키를 사용하는 경우 true
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:5173") // React 개발 서버 주소
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
     }
 
-    @Bean // = new 한 후 스프링 컨테이너가 관리
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
-    // @Bean
-    // CustomLoginSuccessHandler successHandler() {
-    // return new CustomLoginSuccessHandler();
-    // }
+    // 저장용 - 강력한 인코딩만 사용
+    @Bean
+    public BCryptPasswordEncoder bcryptEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-    // @Bean
-    // RememberMeServices rememberMeServices(UserDetailsService userDetailsService)
-    // {
-    // RememberMeTokenAlgorithm encodingAlgorithm = RememberMeTokenAlgorithm.SHA256;
-    // TokenBasedRememberMeServices rememberMeServices = new
-    // TokenBasedRememberMeServices("myKey",
-    // userDetailsService, encodingAlgorithm);
-    // rememberMeServices.setMatchingAlgorithm(RememberMeTokenAlgorithm.MD5);
-    // rememberMeServices.setTokenValiditySeconds(60 * 60 * 24 * 7);
-    // return rememberMeServices;
-    // }
+    // jwtFilter 주입용
+    @Bean
+    public JwtFilter jwtFilter() {
+        return new JwtFilter(jwtUtil, userDetailsService);
+    }
+
+    // 주입용
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        return builder.build();
+    }
 
 }

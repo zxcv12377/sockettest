@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.sockettest.dto.VoiceChannelDto;
+import com.example.sockettest.dto.voiceChat.VoiceChannelDto;
 import com.example.sockettest.service.VoiceChannelService;
 import com.example.sockettest.service.VoiceChatLogService;
 

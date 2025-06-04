@@ -2,10 +2,10 @@ package com.example.sockettest.service;
 
 import org.springframework.stereotype.Service;
 
-import com.example.sockettest.entity.Member;
-import com.example.sockettest.entity.VoiceChannel;
-import com.example.sockettest.entity.VoiceChannelMember;
-import com.example.sockettest.repository.VoiceChannelMemberRepository;
+import com.example.sockettest.entity.VoiceChat.Member;
+import com.example.sockettest.entity.VoiceChat.VoiceChannel;
+import com.example.sockettest.entity.VoiceChat.VoiceChannelMember;
+import com.example.sockettest.repository.voiceChat.VoiceChannelMemberRepository;
 
 import lombok.RequiredArgsConstructor;
 

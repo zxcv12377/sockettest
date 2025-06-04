@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.sockettest.dto.VoiceChannelDto;
-import com.example.sockettest.entity.VoiceChannel;
-import com.example.sockettest.repository.VoiceChannelRepository;
+import com.example.sockettest.dto.voiceChat.VoiceChannelDto;
+import com.example.sockettest.entity.VoiceChat.VoiceChannel;
+import com.example.sockettest.repository.voiceChat.VoiceChannelRepository;
 
 import lombok.RequiredArgsConstructor;
 
