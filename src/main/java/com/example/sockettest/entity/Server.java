@@ -38,9 +38,9 @@ public class Server {
     private String description;
 
     // 서버 소유자 (필수 관계, fetch LAZY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private Member owner;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "owner_id", nullable = false)
+    // private Member owner;
 
     // 서버에 속한 멤버 목록 (ServerMember - 서버별 참여/권한)
     @Builder.Default

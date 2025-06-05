@@ -2,8 +2,7 @@ package com.example.sockettest.entity;
 
 import java.time.LocalDateTime;
 
-import com.example.sockettest.entity.VoiceChat.Member;
-import com.example.sockettest.entity.VoiceChat.VoiceChannel;
+import com.example.sockettest.entity.Member;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,11 +15,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Getter
 @Builder
-@ToString(exclude = { "channelId", "memberId" })
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -30,7 +27,7 @@ public class VoiceChatLog {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id")
-    private VoiceChannel channel;
+    private ChatRoom room;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

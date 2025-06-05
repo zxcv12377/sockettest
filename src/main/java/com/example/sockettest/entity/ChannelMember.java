@@ -36,6 +36,12 @@ public class ChannelMember {
     private boolean muted;
     private boolean banned;
 
+    private boolean speaking;
+
+    // public void changeSpeaking(boolean speaking) {
+    // this.speaking = speaking;
+    // }
+
     // 관계 설명
     // Member 1: ChannelMember
     // ChatRoom 1:N ChannelMember

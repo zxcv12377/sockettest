@@ -24,11 +24,7 @@ public class ChatRoom {
 
     private int maxParticipants; // 채널 최대 인원
 
-    // 채널에 접속해 있는 인원 (양방향)
-    @OneToMany(mappedBy = "channel")
-    private List<ChannelMember> members;
-
-    @OneToMany(mappedBy = "channel")
+    @OneToMany(mappedBy = "room")
     private List<VoiceChatLog> logs;
     // (양방향 옵션)
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)

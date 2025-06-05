@@ -36,8 +36,5 @@ public class Member {
     private List<Reply> replies;
 
     @OneToMany(mappedBy = "member")
-    private List<ChatRoom> chatRooms;
-
-    @OneToMany(mappedBy = "member")
     private List<VoiceChatLog> voiceLogs;
 }

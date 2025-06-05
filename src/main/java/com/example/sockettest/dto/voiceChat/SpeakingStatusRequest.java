@@ -13,6 +13,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class SpeakingStatusRequest {
     private Long memberId;
-    private Long channelId;
+    private Long chatRoomlId;
     private boolean speaking;
 }

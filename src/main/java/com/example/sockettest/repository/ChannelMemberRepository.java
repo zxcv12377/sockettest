@@ -3,6 +3,7 @@ package com.example.sockettest.repository;
 import com.example.sockettest.entity.ChannelMember;
 import com.example.sockettest.entity.ChatRoom;
 import com.example.sockettest.entity.Member;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,8 @@ public interface ChannelMemberRepository extends JpaRepository<ChannelMember, Lo
     Optional<ChannelMember> findByRoomIdAndMemberMno(Long roomId, Long memberMno);
 
     boolean existsByRoomIdAndMemberMno(Long roomId, Long memberMno);
+
+    long countByRoom(ChatRoom room);
 
     @Transactional
     void deleteByRoomId(Long roomId);

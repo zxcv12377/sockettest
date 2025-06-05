@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.sockettest.entity.ChatRoom;
+import com.example.sockettest.entity.Member;
 import com.example.sockettest.entity.VoiceChatLog;
-import com.example.sockettest.entity.VoiceChat.Member;
-import com.example.sockettest.entity.VoiceChat.VoiceChannel;
 import com.example.sockettest.repository.voiceChat.VoiceChatLogRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,18 +21,18 @@ public class VoiceChatLogService {
         return voiceChatLogRepository.findAll();
     }
 
-    public List<VoiceChatLog> findRowByChannel(VoiceChannel channel) {
-        return voiceChatLogRepository.findByChannel(channel);
+    public List<VoiceChatLog> findRowByChannel(ChatRoom room) {
+        return voiceChatLogRepository.findByRoom(room);
     }
 
     public List<VoiceChatLog> findRowByMember(Member member) {
         return voiceChatLogRepository.findByMember(member);
     }
 
-    public void log(Member member, VoiceChannel channel, String action, boolean speaking) {
+    public void log(Member member, ChatRoom chatRoom, String action, boolean speaking) {
         VoiceChatLog log = VoiceChatLog.builder()
                 .member(member)
-                .channel(channel)
+                .room(chatRoom)
                 .action(action)
                 .speaking(speaking)
                 .timestamp(LocalDateTime.now())

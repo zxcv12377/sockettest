@@ -6,6 +6,7 @@ import VoiceChattest2 from "./components/test/VoiceChattest2";
 import VoiceChannel from "./components/test/VoiceChannelTest";
 import VoiceChannelTest from "./components/test/VoiceChannelTest";
 import VoiceChannelWithSpeaking from "./components/test/VoiceChannelWithSpeaking";
+import SignUp from "./components/SignUp";
 
 function App({ postId }) {
   return (
@@ -16,7 +17,8 @@ function App({ postId }) {
       {/* <VoiceChattest roomId="123" /> */}
       {/* <VoiceChattest2 roomId="123" /> */}
       {/* <VoiceChannelTest /> */}
-      <VoiceChannelWithSpeaking />
+      {/* <VoiceChannelWithSpeaking /> */}
+      <SignUp />
     </div>
   );
 }
